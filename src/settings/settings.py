@@ -1,4 +1,5 @@
 import os
+
 from celery.schedules import crontab
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,8 +93,8 @@ AUTH_USER_MODEL = 'account.User'
 CELERY_BROKER_URL = 'amqp://localhost'
 
 CELERY_BEAT_SCHEDULE = {
-    'parse': {
+    'privatbank': {
         'task': 'rate.tasks.parse',
-        'schedule': crontab(minute='*/15'),
+        'schedule': crontab(minute='*/1'),
     },
 }

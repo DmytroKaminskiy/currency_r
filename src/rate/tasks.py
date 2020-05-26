@@ -1,68 +1,51 @@
 import requests
 from celery import shared_task
 
-from rate import model_choices as mch
 from rate.utils import to_decimal
+from rate import model_choices as mch
 
 
 @shared_task
 def parse_privatbank():
     from rate.models import Rate
 
-    url = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5"
+    url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5'
     response = requests.get(url)
-    currency_type_mapper = {
-        'USD': mch.CURRENCY_TYPE_USD,
-        'EUR': mch.CURRENCY_TYPE_EUR,
-    }
-    for item in response.json():
 
-        if item['ccy'] not in currency_type_mapper:
+    currency_mapper = {
+        'USD': mch.CURRENCY_USD,
+        'EUR': mch.CURRENCY_EUR,
+    }
+
+    for r in response.json():
+
+        if r['ccy'] not in currency_mapper:
             continue
 
-        currency_type = currency_type_mapper[item['ccy']]
+        sale = to_decimal(r['sale'])
+        buy = to_decimal(r['buy'])
+        currency = currency_mapper[r['ccy']]
 
-        # buy
-        amount = to_decimal(item['buy'])
-
-        last = Rate.objects.filter(
+        latest_rate = Rate.objects.filter(
             source=mch.SOURCE_PRIVATBANK,
-            currency_type=currency_type,
-            type=mch.RATE_TYPE_BUY,
-        ).last()
+            currency=currency,
+        ).last()  # Rate() or None
 
-        if last is None or last.amount != amount:
+        if latest_rate is None or latest_rate.sale != sale or latest_rate.buy != buy:
             Rate.objects.create(
-                amount=amount,
                 source=mch.SOURCE_PRIVATBANK,
-                currency_type=currency_type,
-                type=mch.RATE_TYPE_BUY,
-            )
-
-        # sale
-        amount = to_decimal(item['sale'])
-
-        last = Rate.objects.filter(
-            source=mch.SOURCE_PRIVATBANK,
-            currency_type=currency_type,
-            type=mch.RATE_TYPE_SALE,
-        ).last()
-
-        if last is None or last.amount != amount:
-            Rate.objects.create(
-                amount=amount,
-                source=mch.SOURCE_PRIVATBANK,
-                currency_type=currency_type,
-                type=mch.RATE_TYPE_SALE,
+                currency=currency,
+                buy=buy,
+                sale=sale,
             )
 
 
 @shared_task
 def parse_monobank():
-    pass
+    print('parse_monobank')
 
 
 @shared_task
 def parse():
-    parse_monobank.delay()
     parse_privatbank.delay()
+    parse_monobank.delay()
