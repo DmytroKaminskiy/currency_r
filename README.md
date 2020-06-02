@@ -1,15 +1,15 @@
 # Currency
 
-0) PrivatBank
+https://getbootstrap.com/docs/4.5/getting-started/introduction/
 
-1) Парсер MonoBank (https://api.monobank.ua/docs/)
-2) http://vkurse.dp.ua/
-3) Источник 3
-4) Источник 4
-5) Источник 5
+1) Добавить footer (https://mdbootstrap.com/docs/jquery/navigation/footer/)
+2) Показать список рейтов в таблице https://getbootstrap.com/docs/4.5/content/tables/
+3) Добавить проверки в тревис
+  - python ./src/manage.py validate_templates
 
-https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+https://docs.djangoproject.com/en/3.0/howto/custom-management-commands/
+? 4) Написать команду (python ./src/manage.py parse_privatbank)
+     которая парсит валюты по апи https://api.privatbank.ua/#p24/exchangeArchive
 
 email testtestapp454545@gmail.com
-
 password qwerty123456qwerty

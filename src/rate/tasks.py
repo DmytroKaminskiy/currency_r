@@ -1,8 +1,9 @@
-import requests
 from celery import shared_task
 
-from rate.utils import to_decimal
 from rate import model_choices as mch
+from rate.utils import to_decimal
+
+import requests
 
 
 @shared_task
@@ -42,7 +43,7 @@ def parse_privatbank():
 
 @shared_task
 def parse_monobank():
-    print('parse_monobank')
+    pass
 
 
 @shared_task
