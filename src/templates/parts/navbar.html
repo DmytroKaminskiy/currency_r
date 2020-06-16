@@ -9,6 +9,17 @@
             <a class="nav-item nav-link active" href="{% url 'index' %}">
                 Home <span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="{% url 'rate:list' %}">Rate List</a>
+
+            {# login logout registration #}
+            {% if request.user.is_authenticated %}
+            {# 1 <a class="nav-item nav-link" href="{% url 'account:my-profile' request.user.id %}">My profile</a> #}
+            <a class="nav-item nav-link" href="{% url 'account:my-profile' %}">My profile</a>
+            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+            <a class="nav-item nav-link" href="#">Sign Up</a>
+            {% endif %}
+
         </div>
     </div>
 </nav>

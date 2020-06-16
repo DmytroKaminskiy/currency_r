@@ -1,10 +1,11 @@
 import os
 
 from celery.schedules import crontab
+from django.urls import reverse_lazy
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '7zbn5g%8%4)72%b6i(=$2gj9n3=hk7r%y36@i^8#$59e=a$e(i'
+SECRET_KEY = '7zbn5g%8%4)72%b6i(=$2gj9n3=hk7r%y36@i^8#$59e=a$e(ikjfgdkjbdkj'
 
 # TODO
 DEBUG = True
@@ -104,3 +105,7 @@ CELERY_BEAT_SCHEDULE = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+
+LOGIN_REDIRECT_URL = reverse_lazy('rate:list')
+LOGOUT_REDIRECT_URL = reverse_lazy('rate:list')
